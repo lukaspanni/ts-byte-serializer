@@ -1,0 +1,42 @@
+{
+  "name": "byte-serializer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Lukas Panni",
+  "files": [
+    "/dist"
+  ],
+  "devDependencies": {
+    "@types/jasmine": "^3.10.3",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jasmine": "^3.99.0",
+    "jasmine-reporters": "^2.5.0",
+    "jasmine-ts": "^0.4.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "test": "npx jasmine-ts --config jasmine.json",
+    "coverage": "npx nyc npm run test",
+    "lint": "npx eslint . --ext .ts",
+    "format": "npx prettier --config .prettierrc src/**/*.ts --write",
+    "build": "tsc --build tsconfig.json",
+    "build-debug": "tsc --build tsconfig.debug.json",
+    "clean": "tsc --build tsconfig.debug.json --clean",
+    "prepare": "npm run clean && npm run build",
+    "prepublishOnly": "npm run test && npm run lint",
+    "preversion": "npm run lint",
+    "postversion": "git push && git push --tags"
+  }
+}

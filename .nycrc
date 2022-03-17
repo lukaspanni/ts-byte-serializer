@@ -1,0 +1,24 @@
+{
+  "cache": false,
+  "check-coverage": false,
+  "extension": [
+    ".ts"
+  ],
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/**",
+    "dist/**",
+    "**/*.d.ts",
+    "**/*.spec.ts",
+    "tests/**"
+  ],
+  "sourceMap": true,
+  "reporter": [
+    "text",
+    "text-summary"
+  ],
+  "all": true,
+  "instrument": true
+}
