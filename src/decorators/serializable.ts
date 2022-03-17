@@ -3,6 +3,11 @@ import { isSerializablePrimitive } from '../serializable-primitives/serializable
 
 export const serializablePropertyPrefix = '_serializableProperty_';
 
+/**
+ * Decorator to add a default serialize and deserialize implementation to a given class
+ * @param parameter configuration for serialization, allows setting a custom size and littleEndian/bigEndian
+ * @constructor class to decorate
+ */
 export const Serializable = (parameter?: { size?: number; littleEndian?: boolean }) => {
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     return class T1 extends constructor {

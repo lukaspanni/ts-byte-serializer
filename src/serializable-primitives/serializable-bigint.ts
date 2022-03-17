@@ -1,6 +1,12 @@
 import { SerializablePrimitive } from './serializable-primitive';
 import { AppendableByteStream, isAppendableByteStream } from '../serializable';
 
+/**
+ * Build a new class for a serializable bigint
+ * @param size size of the byte-representation
+ * @param getFun function to read a bigint from a bytestream
+ * @param setFun function to append a bigint's byte-representations to a bytestream
+ */
 const buildSerializableBigintPrimitive = (
   size: number,
   getFun: (view: DataView, pos: number, littleEndian?: boolean) => bigint,

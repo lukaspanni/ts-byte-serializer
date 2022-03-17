@@ -1,6 +1,9 @@
 import { SerializablePrimitive } from './serializable-primitive';
 import { AppendableByteStream } from '../serializable';
 
+/**
+ * serializable array of bytes (based upon uint8array)
+ */
 export class ByteArray extends SerializablePrimitive<Uint8Array> {
   constructor(data: Uint8Array | AppendableByteStream, length?: number) {
     super(data, length);
