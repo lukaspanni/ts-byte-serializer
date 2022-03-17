@@ -1,4 +1,4 @@
-import { AppendableByteStream, isAppendableByteStream, Serializable } from '../serializable';
+import { AppendableByteStream, isAppendableByteStream, isSerializable, Serializable } from '../serializable';
 
 /**
  * Generic base class for serializable primitives to serve as building blocks for complex serializable types
@@ -38,3 +38,6 @@ export abstract class SerializablePrimitive<T> implements Serializable {
     return array;
   }
 }
+
+export const isSerializablePrimitive = (checkObject: any): checkObject is SerializablePrimitive<any> =>
+  isSerializable(checkObject) && 'append' in checkObject;
