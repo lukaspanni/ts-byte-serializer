@@ -5,7 +5,9 @@ import { serializablePropertyPrefix } from './serializable';
  * Decorator to include a property inside a serializable-decorated class in its byte-representation
  * @param type type of the property (any serializable type is allowed)
  */
-export const SerializableProperty = <T extends Serializable>(type: { new (...args: any[]): Serializable }) => {
+export const SerializableProperty = <T extends Serializable>(type: {
+  new (...args: any[]): Serializable;
+}): Function => {
   return function (target: any, propertyKey: string) {
     let object = new type() as T;
     Object.defineProperty(target, serializablePropertyPrefix + propertyKey, {
