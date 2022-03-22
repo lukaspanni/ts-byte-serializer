@@ -11,13 +11,13 @@ const buildSerializableBigintPrimitive = (
   size: number,
   getFun: (view: DataView, pos: number, littleEndian?: boolean) => bigint,
   setFun: (view: DataView, pos: number, value: bigint, littleEndian?: boolean) => void
-): new (data: bigint | AppendableByteStream) => SerializablePrimitive<bigint> => {
+): new (data?: bigint | AppendableByteStream) => SerializablePrimitive<bigint> => {
   return class SerializableBigIntPrimitive extends SerializablePrimitive<bigint> {
     public readonly size = size;
     protected _value: bigint;
 
-    constructor(data: bigint | AppendableByteStream) {
-      super(data);
+    constructor(data?: bigint | AppendableByteStream) {
+      super(data ?? BigInt(0));
       if (isAppendableByteStream(data)) this._value = this.readFromByteStream(data);
       else this._value = data as bigint;
     }
