@@ -1,3 +1,4 @@
 export { Serializable } from './serializable';
 export { SerializableNumber } from './serializable-number';
-export { SerializableProperty } from './serializable-property';
+export { SerializableObjectProperty } from './serializable-property';
+export { SerializableByteArray } from './serializable-byte-array';

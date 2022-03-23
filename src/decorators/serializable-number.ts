@@ -1,4 +1,4 @@
-import { SerializablePrimitive, Uint8 } from '../serializable-primitives';
+import { SerializablePrimitive } from '../serializable-primitives';
 import { serializablePropertyPrefix } from './serializable';
 
 /**
