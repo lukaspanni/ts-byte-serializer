@@ -44,7 +44,7 @@ export const Serializable = (parameter?: { size?: number; littleEndian?: boolean
           const property = (this as any)[key];
           if (isSerializable(property)) {
             if (isSerializablePrimitive(property)) {
-              property.deserialize(bytestream);
+              property.deserialize(bytestream, this);
               continue;
             }
             property.deserialize(bytestream);
