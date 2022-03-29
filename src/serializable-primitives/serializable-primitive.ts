@@ -20,13 +20,13 @@ export abstract class SerializablePrimitive<T> implements Serializable {
     this._value = newValue;
   }
 
-  public deserialize(bytestream: AppendableByteStream): void {
-    this.value = this.readFromByteStream(bytestream);
+  public deserialize(bytestream: AppendableByteStream, thisArg?: any): void {
+    this.value = this.readFromByteStream(bytestream, thisArg);
   }
 
   public abstract append(bytestream: AppendableByteStream): void;
 
-  protected abstract readFromByteStream(bytestream: AppendableByteStream, ...additionalArgs: any[]): T;
+  protected abstract readFromByteStream(bytestream: AppendableByteStream, thisArg?: any): T;
 
   public toJSON(): T | undefined {
     return this.value;
