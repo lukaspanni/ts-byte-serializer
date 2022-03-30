@@ -17,7 +17,8 @@
   "sourceMap": true,
   "reporter": [
     "text",
-    "text-summary"
+    "text-summary",
+    "cobertura"
   ],
   "all": true,
   "instrument": true

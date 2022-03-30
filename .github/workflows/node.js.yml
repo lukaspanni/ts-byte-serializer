@@ -28,7 +28,7 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Test
-        run: npm run test
+        run: npm run coverage
 
       - name: Upload Unit Test Results
         if: always()
@@ -36,6 +36,12 @@ jobs:
         with:
           name: nodev${{matrix.node-version}}
           path: test-output/*.xml
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v2
+        if: matrix.node-version == '17.x'
+        with:
+          files: ./coverage/cobertura-coverage.xml
 
   publish-rest-results:
     runs-on: ubuntu-latest
