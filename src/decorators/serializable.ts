@@ -27,9 +27,7 @@ export const Serializable = (parameter?: { size?: number; littleEndian?: boolean
       public toJSON(): { [key: string]: any } {
         const obj: { [key: string]: any } = {};
         for (const key in this) {
-          if (!key.startsWith(serializablePropertyPrefix)) {
-            obj[key] = this[key];
-          }
+          if (!key.startsWith(serializablePropertyPrefix)) obj[key] = this[key];
         }
         return obj;
       }
@@ -70,9 +68,8 @@ const appendProperty = <T>(thisArg: T, key: keyof T, bytestream: AppendableByteS
       property.append(bytestream);
       return;
     }
-    for (const subkey in property) {
+    for (const subkey in property)
       if (subkey.startsWith(serializablePropertyPrefix))
         appendProperty(property, subkey as keyof T[keyof T], bytestream);
-    }
   }
 };
