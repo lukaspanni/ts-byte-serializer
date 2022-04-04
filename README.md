@@ -1,5 +1,9 @@
 # ts-byte-serializer
 
+<a href="https://www.npmjs.com/package/ts-byte-serializer"><img src="https://badgen.net/npm/v/ts-byte-serializer" alt="Version"></a>
+<a href="https://www.npmjs.com/package/ts-byte-serializer"><img src="https://badgen.net/npm/dt/ts-byte-serializer" alt="Downloads"></a>
+<a href="https://www.npmjs.com/package/ts-byte-serializer"><img src="https://badgen.net/npm/license/ts-byte-serializer" alt="License"></a>
+
 Easy-to-use binary (de)serializer for TypeScript.
 
 Possible use-cases: implementation of low-level network protocols, storing/transmitting binary data

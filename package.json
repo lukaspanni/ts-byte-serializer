@@ -1,10 +1,11 @@
 {
-  "name": "byte-serializer",
+  "name": "ts-byte-serializer",
   "version": "0.0.1",
-  "description": "",
+  "description": "Easy-to-use binary (de)serializer for TypeScript ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Lukas Panni",
+  "license": "MIT",
   "files": [
     "/dist"
   ],
