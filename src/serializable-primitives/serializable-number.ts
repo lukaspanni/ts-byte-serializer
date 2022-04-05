@@ -70,3 +70,15 @@ export const Int32 = buildSerializableNumberPrimitive(
   (view, pos, littleEndian) => view.getInt32(pos, littleEndian),
   (view, pos, value, littleEndian) => view.setInt32(pos, value, littleEndian)
 );
+
+export const Float32 = buildSerializableNumberPrimitive(
+  4,
+  (view, pos, littleEndian) => view.getFloat32(pos, littleEndian),
+  (view, pos, value, littleEndian) => view.setFloat32(pos, value, littleEndian)
+);
+
+export const Float64 = buildSerializableNumberPrimitive(
+  8,
+  (view, pos, littleEndian) => view.getFloat64(pos, littleEndian),
+  (view, pos, value, littleEndian) => view.setFloat64(pos, value, littleEndian)
+);

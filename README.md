@@ -11,6 +11,7 @@ Possible use-cases: implementation of low-level network protocols, storing/trans
 Currently supported types for (de)serialization:
 
 - 8/16/32/64 Bit integer (signed and unsigned)
+- 32 and 64 Bit float
 - arrays of bytes (= TypeScript Uint8Arrays)
 - any user-defined type implementing the Serializable-Interface
 
