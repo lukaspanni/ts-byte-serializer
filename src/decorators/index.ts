@@ -1,4 +1,4 @@
-export { Serializable } from './serializable';
+export { SerializableClass } from './serializable-class';
 export { SerializableNumber } from './serializable-number';
 export { SerializableObjectProperty } from './serializable-property';
 export { SerializableByteArray } from './serializable-byte-array';

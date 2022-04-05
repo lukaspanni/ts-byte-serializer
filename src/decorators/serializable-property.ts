@@ -1,5 +1,5 @@
 import { Serializable } from '../serializable';
-import { serializablePropertyPrefix } from './serializable';
+import { serializablePropertyPrefix } from './serializable-class';
 
 /**
  * Decorator to include a object property inside a serializable-decorated class in its byte-representation

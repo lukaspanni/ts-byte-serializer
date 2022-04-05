@@ -1,9 +1,16 @@
-import { Serializable as ISerializable, AppendableByteStream } from '../../src/serializable';
-import { Serializable } from '../../src/decorators/serializable';
-import { Uint8, Uint16, Uint32, SerializableNumber, Uint64 } from '../../src/index';
+import {
+  Uint8,
+  Uint16,
+  Uint32,
+  SerializableNumber,
+  Uint64,
+  Serializable,
+  SerializableClass,
+  AppendableByteStream
+} from '../../src/index';
 
-@Serializable({ littleEndian: true })
-class ExampleClass implements ISerializable {
+@SerializableClass({ littleEndian: true })
+class ExampleClass implements Serializable {
   @SerializableNumber(Uint8)
   public testByte: number = 0;
 

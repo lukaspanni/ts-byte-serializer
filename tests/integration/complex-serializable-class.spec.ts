@@ -1,16 +1,17 @@
-import { Serializable as ISerializable, AppendableByteStream } from '../../src/serializable';
-import { Serializable } from '../../src/decorators/serializable';
 import {
   Uint8,
   Uint16,
   Uint32,
   SerializableNumber,
   SerializableObjectProperty,
-  SerializableByteArray
+  SerializableByteArray,
+  SerializableClass,
+  Serializable,
+  AppendableByteStream
 } from '../../src/index';
 
-@Serializable({ littleEndian: true })
-class ExampleHeader implements ISerializable {
+@SerializableClass({ littleEndian: true })
+class ExampleHeader implements Serializable {
   @SerializableNumber(Uint8)
   public type: number;
 
@@ -30,8 +31,8 @@ class ExampleHeader implements ISerializable {
   }
 }
 
-@Serializable({ littleEndian: true })
-class ExampleFrame implements ISerializable {
+@SerializableClass({ littleEndian: true })
+class ExampleFrame implements Serializable {
   @SerializableObjectProperty(ExampleHeader)
   public header: ExampleHeader;
 

@@ -1,5 +1,5 @@
 import { SerializablePrimitive } from '../serializable-primitives';
-import { serializablePropertyPrefix } from './serializable';
+import { serializablePropertyPrefix } from './serializable-class';
 
 /**
  * Decorator to include a number-property inside a serializable-decorated class in its byte-representation

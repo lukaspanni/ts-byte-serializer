@@ -8,7 +8,7 @@ export const serializablePropertyPrefix = '_serializableProperty_';
  * @param parameter configuration for serialization, allows setting a custom size and littleEndian/bigEndian
  * @constructor class to decorate
  */
-export const Serializable = (parameter?: { size?: number; littleEndian?: boolean }): Function => {
+export const SerializableClass = (parameter?: { size?: number; littleEndian?: boolean }): Function => {
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     return class T1 extends constructor {
       public serialize() {

@@ -1,5 +1,5 @@
 import { ByteArray } from '../serializable-primitives';
-import { serializablePropertyPrefix } from './serializable';
+import { serializablePropertyPrefix } from './serializable-class';
 
 /**
  * Decorator to include a uint8 property inside a serializable-decorated class in its byte-representation
