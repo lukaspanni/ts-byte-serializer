@@ -83,4 +83,10 @@ describe('Complex serializable class with serializable object property', () => {
     obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
     expect(obj).toEqual(expectedObj);
   });
+
+  it('multiple instances should be able to have different values', () => {
+    const obj1 = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+    const obj2 = new ExampleFrame(new ExampleHeader(12, 13), 0);
+    expect(obj1).not.toEqual(obj2);
+  });
 });

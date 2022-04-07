@@ -2,7 +2,7 @@ import { ByteArray } from '../serializable-primitives';
 import { serializablePropertyPrefix } from './serializable-class';
 
 /**
- * Decorator to include a uint8 property inside a serializable-decorated class in its byte-representation
+ * Decorator to include a uint8Array inside a serializable-decorated class in its byte-representation
  * @param lengthParameter: optionally specify either a fixed length or the name of a property to use as array-length during deserialization
  */
 export const SerializableByteArray = (lengthParameter?: number | string): Function => {
