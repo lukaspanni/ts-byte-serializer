@@ -10,7 +10,6 @@ export const SerializableNumber = (
     | { new (value?: number): SerializablePrimitive<number> }
     | { new (value?: bigint): SerializablePrimitive<bigint> }
 ) => {
-  //TODO: find way to support bigints -> maybe with separate decorator?
   return function (target: any, propertyKey: string) {
     const primitiveObject = new type();
     Object.defineProperty(target, propertyKey, {

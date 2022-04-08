@@ -53,10 +53,4 @@ describe('Serializable class with string-field', () => {
     obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
     expect(obj).toEqual(expectedObj);
   });
-
-  it('multiple instances should be able to have different values', () => {
-    const obj1 = new ExampleClass('TEST');
-    const obj2 = new ExampleClass('ABCD');
-    expect(obj1).not.toEqual(obj2);
-  });
 });
