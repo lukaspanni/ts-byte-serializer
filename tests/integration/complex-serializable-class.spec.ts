@@ -8,7 +8,7 @@ import {
   SerializableClass,
   Serializable,
   AppendableByteStream
-} from "../../src/index";
+} from '../../src/index';
 
 @SerializableClass({ littleEndian: true })
 class ExampleHeader implements Serializable {
@@ -18,9 +18,7 @@ class ExampleHeader implements Serializable {
   @SerializableNumber(Uint16)
   public sequenceNumber!: number;
 
-  constructor(type: number = 0, sequenceNumber: number = 0) {
-
-  }
+  constructor(type: number = 0, sequenceNumber: number = 0) {}
 
   public init(type: number = 0, sequenceNumber: number = 0) {
     this.type = type;
@@ -28,11 +26,11 @@ class ExampleHeader implements Serializable {
   }
 
   serialize(): Uint8Array {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   deserialize(bytes: AppendableByteStream): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }
 
@@ -44,15 +42,14 @@ class ExampleFrame implements Serializable {
   @SerializableNumber(Uint32)
   public payloadLength!: number;
 
-  @SerializableByteArray("payloadLength")
+  @SerializableByteArray('payloadLength')
   public payload!: Uint8Array;
 
   constructor(
     header: ExampleHeader = new ExampleHeader(),
     payloadLength: number = 0,
     payload: Uint8Array = new Uint8Array()
-  ) {
-  }
+  ) {}
 
   public init(
     header: ExampleHeader = new ExampleHeader(),
@@ -65,11 +62,11 @@ class ExampleFrame implements Serializable {
   }
 
   serialize(): Uint8Array {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   deserialize(bytes: AppendableByteStream): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 }
 

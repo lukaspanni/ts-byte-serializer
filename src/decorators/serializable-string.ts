@@ -1,5 +1,5 @@
 import { ByteArray } from '../serializable-primitives';
-import { serializablePropertyPrefix } from './serializable-class';
+import { serializablePropertyPrefix, serializablePropertyTypeInfoSuffix } from './serializable-class';
 
 /**
  * Decorator to include a string inside a serializable-decorated class in its byte-representation
@@ -7,21 +7,30 @@ import { serializablePropertyPrefix } from './serializable-class';
  */
 export const SerializableString = (lengthParameter?: number | string): Function => {
   return function (target: any, propertyKey: string) {
-    const primitiveObject = new ByteArray(undefined, lengthParameter);
+    const serializablePropertyName = serializablePropertyPrefix + propertyKey;
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
-    Object.defineProperty(target, serializablePropertyPrefix + propertyKey, {
-      value: primitiveObject,
-      enumerable: true
-    });
+
     Object.defineProperty(target, propertyKey, {
       enumerable: true,
-      get: () => {
-        return decoder.decode(primitiveObject.value);
+      get: function () {
+        return decoder.decode(this[serializablePropertyName].value);
       },
-      set: (value: string) => {
-        if (value !== undefined) primitiveObject.value = encoder.encode(value);
+      set: function (value: string) {
+        if (this[serializablePropertyName] !== undefined && value !== undefined)
+          this[serializablePropertyName].value = encoder.encode(value);
       }
+    });
+
+    Object.defineProperty(target, serializablePropertyName, {
+      value: undefined,
+      enumerable: true,
+      writable: true
+    });
+
+    Object.defineProperty(target, serializablePropertyName + serializablePropertyTypeInfoSuffix, {
+      value: () => new ByteArray(undefined, lengthParameter),
+      enumerable: true
     });
   };
 };
