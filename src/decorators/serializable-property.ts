@@ -1,5 +1,6 @@
 import { Serializable } from '../serializable';
-import { serializablePropertyPrefix, serializablePropertyTypeInfoSuffix } from './serializable-class';
+import { prepareUnderlyingObject } from './decorator-common';
+import { serializablePropertyPrefix } from './serializable-class';
 
 /**
  * Decorator to include a object property inside a serializable-decorated class in its byte-representation
@@ -21,15 +22,6 @@ export const SerializableObjectProperty = <T extends Serializable>(type: {
       }
     });
 
-    Object.defineProperty(target, serializablePropertyName, {
-      value: undefined,
-      enumerable: true,
-      writable: true
-    });
-
-    Object.defineProperty(target, serializablePropertyName + serializablePropertyTypeInfoSuffix, {
-      value: () => new type(),
-      enumerable: true
-    });
+    prepareUnderlyingObject(target, serializablePropertyName, () => new type());
   };
 };

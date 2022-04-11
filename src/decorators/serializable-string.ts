@@ -1,5 +1,6 @@
 import { ByteArray } from '../serializable-primitives';
-import { serializablePropertyPrefix, serializablePropertyTypeInfoSuffix } from './serializable-class';
+import { prepareUnderlyingObject } from './decorator-common';
+import { serializablePropertyPrefix } from './serializable-class';
 
 /**
  * Decorator to include a string inside a serializable-decorated class in its byte-representation
@@ -22,15 +23,10 @@ export const SerializableString = (lengthParameter?: number | string): Function 
       }
     });
 
-    Object.defineProperty(target, serializablePropertyName, {
-      value: undefined,
-      enumerable: true,
-      writable: true
-    });
-
-    Object.defineProperty(target, serializablePropertyName + serializablePropertyTypeInfoSuffix, {
-      value: () => new ByteArray(undefined, lengthParameter),
-      enumerable: true
-    });
+    prepareUnderlyingObject<ByteArray>(
+      target,
+      serializablePropertyName,
+      () => new ByteArray(undefined, lengthParameter)
+    );
   };
 };

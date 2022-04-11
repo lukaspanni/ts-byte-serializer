@@ -2,7 +2,7 @@ import { AppendableByteStream, ensureCapacity, isSerializable } from '../seriali
 import { isSerializablePrimitive } from '../serializable-primitives/serializable-primitive';
 
 export const serializablePropertyPrefix = '_serializableProperty_';
-export const serializablePropertyTypeInfoSuffix = '_type_';
+export const serializablePropertyConstructFunctionSuffix = '_construct_';
 
 /**
  * Decorator to add a default serialize and deserialize implementation to a given class
@@ -19,8 +19,8 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
         //initialize underlying object for serializable properties
         for (const key in this) {
           if (!key.startsWith(serializablePropertyPrefix)) continue;
-          if (key.endsWith(serializablePropertyTypeInfoSuffix)) continue;
-          this[key] = (this as any)[key + serializablePropertyTypeInfoSuffix]();
+          if (key.endsWith(serializablePropertyConstructFunctionSuffix)) continue;
+          this[key] = (this as any)[key + serializablePropertyConstructFunctionSuffix]();
         }
         // call init function to initialize object
         if (typeof (this as any)['init'] === 'function') {
@@ -93,7 +93,10 @@ const appendProperty = <T>(thisArg: T, key: keyof T, bytestream: AppendableByteS
     }
     //maybe call serialize of serializable property??
     for (const subkey in property) {
-      if (subkey.startsWith(serializablePropertyPrefix) && !subkey.endsWith(serializablePropertyTypeInfoSuffix)) {
+      if (
+        subkey.startsWith(serializablePropertyPrefix) &&
+        !subkey.endsWith(serializablePropertyConstructFunctionSuffix)
+      ) {
         appendProperty(property, subkey as keyof T[keyof T], bytestream);
       }
     }
