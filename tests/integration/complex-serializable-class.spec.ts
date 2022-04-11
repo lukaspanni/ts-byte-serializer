@@ -70,26 +70,30 @@ class ExampleFrame implements Serializable {
   }
 }
 
-// currently serializable property is not working
-// describe("Complex serializable class with serializable object property", () => {
-//   it("object should serialize into Uint8Array", () => {
-//     const header = new ExampleHeader(10, 43);
-//
-//     const obj = new ExampleFrame(header, 8, new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07]));
-//     const expectedBytes = new Uint8Array([
-//       0x0a, 0x2b, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
-//     ]);
-//
-//     const serialized = obj.serialize();
-//     expect(serialized).toEqual(expectedBytes);
-//   });
-//
-//   it("deserialize should return object", () => {
-//     const bytes = new Uint8Array([0x8a, 0x2c, 0x00, 0x03, 0x00, 0x00, 0x00, 0x03, 0x02, 0x01]);
-//     const expectedObj = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
-//
-//     const obj = new ExampleFrame();
-//     obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
-//     expect(obj).toEqual(expectedObj);
-//   });
-// });
+describe('Complex serializable class with serializable object property', () => {
+  it('object should serialize into Uint8Array', () => {
+    const header = new ExampleHeader(10, 43);
+    const obj = new ExampleFrame(header, 8, new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07]));
+    const expectedBytes = new Uint8Array([
+      0x0a, 0x2b, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+    ]);
+
+    const serialized = obj.serialize();
+    expect(serialized).toEqual(expectedBytes);
+  });
+
+  it('deserialize should return object', () => {
+    const bytes = new Uint8Array([0x8a, 0x2c, 0x00, 0x03, 0x00, 0x00, 0x00, 0x03, 0x02, 0x01]);
+    const expectedObj = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+
+    const obj = new ExampleFrame();
+    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    expect(obj).toEqual(expectedObj);
+  });
+
+  it('instances created with different values should not be equal', () => {
+    const obj1 = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+    const obj2 = new ExampleFrame(new ExampleHeader(12, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+    expect(obj1).not.toEqual(obj2);
+  });
+});

@@ -1,8 +1,8 @@
-import { AppendableByteStream, ensureCapacity, isSerializable } from "../serializable";
-import { isSerializablePrimitive } from "../serializable-primitives/serializable-primitive";
+import { AppendableByteStream, ensureCapacity, isSerializable } from '../serializable';
+import { isSerializablePrimitive } from '../serializable-primitives/serializable-primitive';
 
-export const serializablePropertyPrefix = "_serializableProperty_";
-export const serializablePropertyTypeInfoSuffix = "_type_";
+export const serializablePropertyPrefix = '_serializableProperty_';
+export const serializablePropertyTypeInfoSuffix = '_type_';
 
 /**
  * Decorator to add a default serialize and deserialize implementation to a given class
@@ -12,9 +12,8 @@ export const serializablePropertyTypeInfoSuffix = "_type_";
  * @constructor class to decorate
  */
 export const SerializableClass = (parameter?: { size?: number; littleEndian?: boolean }): Function => {
-  return function <T extends { new(...args: any[]): {} }>(constructor: T) {
+  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     return class T1 extends constructor {
-
       constructor(...args: any[]) {
         super(...args);
         //initialize underlying object for serializable properties
@@ -24,8 +23,8 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
           this[key] = (this as any)[key + serializablePropertyTypeInfoSuffix]();
         }
         // call init function to initialize object
-        if (typeof (this as any)["init"] === "function") {
-          (this as any)["init"](...args);
+        if (typeof (this as any)['init'] === 'function') {
+          (this as any)['init'](...args);
         }
       }
 
@@ -48,7 +47,7 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
           if (!key.startsWith(serializablePropertyPrefix)) {
             // bigints cause problems in json serialization, so the string representation is used
             // see: https://github.com/GoogleChromeLabs/jsbi/issues/30
-            if (typeof this[key] === "bigint") obj[key] = String(this[key]);
+            if (typeof this[key] === 'bigint') obj[key] = String(this[key]);
             else obj[key] = this[key];
           }
         }
@@ -92,6 +91,7 @@ const appendProperty = <T>(thisArg: T, key: keyof T, bytestream: AppendableByteS
       property.append(bytestream);
       return;
     }
+    //maybe call serialize of serializable property??
     for (const subkey in property) {
       if (subkey.startsWith(serializablePropertyPrefix) && !subkey.endsWith(serializablePropertyTypeInfoSuffix)) {
         appendProperty(property, subkey as keyof T[keyof T], bytestream);
