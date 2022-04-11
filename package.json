@@ -1,6 +1,6 @@
 {
   "name": "ts-byte-serializer",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Easy-to-use binary (de)serializer for TypeScript ",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
