@@ -1,4 +1,5 @@
 import { Serializable } from '../serializable';
+import { prepareUnderlyingObject } from './decorator-common';
 import { serializablePropertyPrefix } from './serializable-class';
 
 /**
@@ -9,20 +10,18 @@ export const SerializableObjectProperty = <T extends Serializable>(type: {
   new (...args: any[]): Serializable;
 }): Function => {
   return function (target: any, propertyKey: string) {
-    let object = new type() as T;
-    Object.defineProperty(target, serializablePropertyPrefix + propertyKey, {
-      value: object,
-      enumerable: true,
-      writable: true
-    });
+    const serializablePropertyName = serializablePropertyPrefix + propertyKey;
+
     Object.defineProperty(target, propertyKey, {
       enumerable: true,
-      get: () => {
-        return object;
+      get: function () {
+        return this[serializablePropertyName];
       },
-      set: (value: T) => {
-        if (value !== undefined) object = value;
+      set: function (value: T) {
+        if (this[serializablePropertyName] !== undefined) this[serializablePropertyName] = value;
       }
     });
+
+    prepareUnderlyingObject(target, serializablePropertyName, () => new type());
   };
 };

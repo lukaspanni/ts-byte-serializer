@@ -2,15 +2,32 @@ import { AppendableByteStream, ensureCapacity, isSerializable } from '../seriali
 import { isSerializablePrimitive } from '../serializable-primitives/serializable-primitive';
 
 export const serializablePropertyPrefix = '_serializableProperty_';
+export const serializablePropertyConstructFunctionSuffix = '_construct_';
 
 /**
  * Decorator to add a default serialize and deserialize implementation to a given class
+ * The constructor of a decorated class cannot access serializable-decorated properties, they can be initialized in a
+ * method called 'init' which will be called after all serializable-properties are initialized with the constructor-parameters
  * @param parameter configuration for serialization, allows setting a custom size and littleEndian/bigEndian
  * @constructor class to decorate
  */
 export const SerializableClass = (parameter?: { size?: number; littleEndian?: boolean }): Function => {
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     return class T1 extends constructor {
+      constructor(...args: any[]) {
+        super(...args);
+        //initialize underlying object for serializable properties
+        for (const key in this) {
+          if (!key.startsWith(serializablePropertyPrefix)) continue;
+          if (key.endsWith(serializablePropertyConstructFunctionSuffix)) continue;
+          this[key] = (this as any)[key + serializablePropertyConstructFunctionSuffix]();
+        }
+        // call init function to initialize object
+        if (typeof (this as any)['init'] === 'function') {
+          (this as any)['init'](...args);
+        }
+      }
+
       public serialize() {
         const bytestream: AppendableByteStream = {
           view: new DataView(new ArrayBuffer(parameter?.size ?? 0)),
@@ -27,7 +44,12 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
       public toJSON(): { [key: string]: any } {
         const obj: { [key: string]: any } = {};
         for (const key in this) {
-          if (!key.startsWith(serializablePropertyPrefix)) obj[key] = this[key];
+          if (!key.startsWith(serializablePropertyPrefix)) {
+            // bigints cause problems in json serialization, so the string representation is used
+            // see: https://github.com/GoogleChromeLabs/jsbi/issues/30
+            if (typeof this[key] === 'bigint') obj[key] = String(this[key]);
+            else obj[key] = this[key];
+          }
         }
         return obj;
       }
@@ -62,14 +84,21 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
 
 const appendProperty = <T>(thisArg: T, key: keyof T, bytestream: AppendableByteStream): void => {
   const property = thisArg[key];
+
   if (isSerializable(property)) {
     if (isSerializablePrimitive(property)) {
       bytestream.view = ensureCapacity(bytestream.view, bytestream.pos + property.size);
       property.append(bytestream);
       return;
     }
-    for (const subkey in property)
-      if (subkey.startsWith(serializablePropertyPrefix))
+    //maybe call serialize of serializable property??
+    for (const subkey in property) {
+      if (
+        subkey.startsWith(serializablePropertyPrefix) &&
+        !subkey.endsWith(serializablePropertyConstructFunctionSuffix)
+      ) {
         appendProperty(property, subkey as keyof T[keyof T], bytestream);
+      }
+    }
   }
 };

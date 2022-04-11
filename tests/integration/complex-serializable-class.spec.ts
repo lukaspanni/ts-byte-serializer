@@ -13,12 +13,14 @@ import {
 @SerializableClass({ littleEndian: true })
 class ExampleHeader implements Serializable {
   @SerializableNumber(Uint8)
-  public type: number;
+  public type!: number;
 
   @SerializableNumber(Uint16)
-  public sequenceNumber: number;
+  public sequenceNumber!: number;
 
-  constructor(type: number = 0, sequenceNumber: number = 0) {
+  constructor(type: number = 0, sequenceNumber: number = 0) {}
+
+  public init(type: number = 0, sequenceNumber: number = 0) {
     this.type = type;
     this.sequenceNumber = sequenceNumber;
   }
@@ -26,6 +28,7 @@ class ExampleHeader implements Serializable {
   serialize(): Uint8Array {
     throw new Error('Method not implemented.');
   }
+
   deserialize(bytes: AppendableByteStream): void {
     throw new Error('Method not implemented.');
   }
@@ -34,15 +37,21 @@ class ExampleHeader implements Serializable {
 @SerializableClass({ littleEndian: true })
 class ExampleFrame implements Serializable {
   @SerializableObjectProperty(ExampleHeader)
-  public header: ExampleHeader;
+  public header!: ExampleHeader;
 
   @SerializableNumber(Uint32)
-  public payloadLength: number;
+  public payloadLength!: number;
 
   @SerializableByteArray('payloadLength')
-  public payload: Uint8Array;
+  public payload!: Uint8Array;
 
   constructor(
+    header: ExampleHeader = new ExampleHeader(),
+    payloadLength: number = 0,
+    payload: Uint8Array = new Uint8Array()
+  ) {}
+
+  public init(
     header: ExampleHeader = new ExampleHeader(),
     payloadLength: number = 0,
     payload: Uint8Array = new Uint8Array()
@@ -55,6 +64,7 @@ class ExampleFrame implements Serializable {
   serialize(): Uint8Array {
     throw new Error('Method not implemented.');
   }
+
   deserialize(bytes: AppendableByteStream): void {
     throw new Error('Method not implemented.');
   }
@@ -62,11 +72,8 @@ class ExampleFrame implements Serializable {
 
 describe('Complex serializable class with serializable object property', () => {
   it('object should serialize into Uint8Array', () => {
-    const obj = new ExampleFrame(
-      new ExampleHeader(10, 43),
-      8,
-      new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07])
-    );
+    const header = new ExampleHeader(10, 43);
+    const obj = new ExampleFrame(header, 8, new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07]));
     const expectedBytes = new Uint8Array([
       0x0a, 0x2b, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
     ]);
@@ -82,5 +89,11 @@ describe('Complex serializable class with serializable object property', () => {
     const obj = new ExampleFrame();
     obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
     expect(obj).toEqual(expectedObj);
+  });
+
+  it('instances created with different values should not be equal', () => {
+    const obj1 = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+    const obj2 = new ExampleFrame(new ExampleHeader(12, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
+    expect(obj1).not.toEqual(obj2);
   });
 });
