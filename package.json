@@ -6,6 +6,13 @@
   "types": "dist/index.d.ts",
   "author": "Lukas Panni",
   "license": "MIT",
+  "keywords": [
+    "serialization",
+    "bytes",
+    "raw",
+    "network",
+    "io"
+  ],
   "files": [
     "/dist"
   ],
