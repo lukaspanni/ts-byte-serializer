@@ -1,6 +1,7 @@
 import {
   AppendableByteStream,
   ByteArray,
+  deserialize,
   Serializable,
   SerializableByteArray,
   SerializableClass,
@@ -43,8 +44,8 @@ describe('Serializable class with string-field', () => {
     const bytes = new Uint8Array([0x54, 0x45, 0x53, 0x54]);
     const expectedObj = new ExampleClass('TEST');
 
-    const obj = new ExampleClass();
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleClass);
+
     expect(obj).toEqual(expectedObj);
   });
 
@@ -52,8 +53,7 @@ describe('Serializable class with string-field', () => {
     const bytes = new Uint8Array([0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47]);
     const expectedObj = new ExampleClass('ABCD');
 
-    const obj = new ExampleClass();
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleClass);
     expect(obj).toEqual(expectedObj);
   });
 });

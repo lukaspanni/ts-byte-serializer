@@ -6,7 +6,8 @@ import {
   Uint64,
   Serializable,
   SerializableClass,
-  AppendableByteStream
+  AppendableByteStream,
+  deserialize
 } from '../../src/index';
 import { Float32, Float64 } from '../../src/serializable-primitives/serializable-number';
 
@@ -83,9 +84,8 @@ describe('Serializable class with primitives only', () => {
     ]);
     const expectedObj = new ExampleClass(42, 2048, 131_072, BigInt(4_000_000_000), 13.42, 15.123);
 
-    const obj = new ExampleClass();
-    //TODO: add deserialize function that returns an object
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleClass);
+
     //manual check because of floating point rounding issues
     expect(obj.testByte).toEqual(expectedObj.testByte);
     expect(obj.testUShort).toEqual(expectedObj.testUShort);

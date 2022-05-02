@@ -7,7 +7,8 @@ import {
   SerializableByteArray,
   SerializableClass,
   Serializable,
-  AppendableByteStream
+  AppendableByteStream,
+  deserialize
 } from '../../src/index';
 
 @SerializableClass({ littleEndian: true })
@@ -86,8 +87,7 @@ describe('Complex serializable class with serializable object property', () => {
     const bytes = new Uint8Array([0x8a, 0x2c, 0x00, 0x03, 0x00, 0x00, 0x00, 0x03, 0x02, 0x01]);
     const expectedObj = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
 
-    const obj = new ExampleFrame();
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleFrame);
     expect(obj).toEqual(expectedObj);
   });
 

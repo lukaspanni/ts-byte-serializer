@@ -1,6 +1,7 @@
 import {
   AppendableByteStream,
   ByteArray,
+  deserialize,
   Serializable,
   SerializableByteArray,
   SerializableClass,
@@ -66,8 +67,7 @@ describe('Serializable class with byteArray only', () => {
     const bytes = new Uint8Array([0x00, 0x01, 0x02]);
     const expectedObj = new ExampleClass(new Uint8Array([0x00, 0x01, 0x02]));
 
-    const obj = new ExampleClass();
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleClass);
     expect(obj).toEqual(expectedObj);
   });
 
@@ -91,8 +91,7 @@ describe('Serializable class with primitive and byteArray', () => {
     const bytes = new Uint8Array([0x2a, 0x00, 0x00, 0x01, 0x02]);
     const expectedObj = new ExampleClass1(42, new Uint8Array([0x00, 0x01, 0x02]));
 
-    const obj = new ExampleClass1();
-    obj.deserialize(bytes);
+    const obj = deserialize(bytes, ExampleClass1);
     expect(obj).toEqual(expectedObj);
   });
 
