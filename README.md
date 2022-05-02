@@ -50,7 +50,7 @@ class ExampleClass implements Serializable {
   public serialize(): Uint8Array {
     throw new Error('Method not implemented.');
   }
-  public deserialize(bytes: AppendableByteStream): void {
+  public deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -63,17 +63,18 @@ const obj = new ExampleClass(42, 2048, 131_072, BigInt(4_000_000_000));
 const serialized = obj.serialize();
 ```
 
-The deserialization currently works on a empty object of this class and fills its properties:
+The deserialization uses the helper method `deserialize` which takes the raw bytes and the target type:
 
 ```typescript
 const bytes = new Uint8Array([
   0x81, 0x88, 0x27, 0xb3, 0xa7, 0x2f, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 ]);
-const obj = new ExampleClass();
-obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+
+const obj = deserialize(bytes, ExampleClass);
 ```
 
-**Note**: Especially the deserialization is subject to change. The method of using a already created object and filling it with data is not the greatest solution.
-Also the parameters of deserialize-method will probably change.
+**Note**: Deserialization currently works using a empty object and filling it with data.
+This is probably not the greatest solution, but the best one I could find so far.
+If you can think of any other way of dealing with this please let me know.
 
 Examples for more complex applications can also be found in the integration tests `/tests/integration/`

@@ -1,4 +1,5 @@
-import { AppendableByteStream, ensureCapacity, isSerializable } from '../serializable';
+import { ensureCapacity, isAppendableByteStream, isSerializable } from '../serializable';
+import { AppendableByteStream } from '../appendable-byte-stream';
 import { isSerializablePrimitive } from '../serializable-primitives/serializable-primitive';
 
 export const serializablePropertyPrefix = '_serializableProperty_';
@@ -29,11 +30,11 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
       }
 
       public serialize() {
-        const bytestream: AppendableByteStream = {
-          view: new DataView(new ArrayBuffer(parameter?.size ?? 0)),
-          pos: 0,
-          littleEndian: parameter?.littleEndian
-        };
+        const bytestream: AppendableByteStream = new AppendableByteStream(
+          new DataView(new ArrayBuffer(parameter?.size ?? 0)),
+          0,
+          parameter?.littleEndian
+        );
         for (const key in this) {
           if (!key.startsWith(serializablePropertyPrefix)) continue;
           appendProperty(this, key, bytestream);
@@ -58,7 +59,10 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
         return JSON.stringify(this);
       }
 
-      public deserialize(bytestream: AppendableByteStream): void {
+      public deserialize(bytes: AppendableByteStream | Uint8Array): void {
+        let bytestream: AppendableByteStream;
+        if (isAppendableByteStream(bytes)) bytestream = bytes;
+        else bytestream = new AppendableByteStream(new DataView(bytes.buffer), 0, parameter?.littleEndian);
         for (const key in this) {
           if (!key.startsWith(serializablePropertyPrefix)) continue;
           const property = (this as any)[key];
@@ -70,13 +74,6 @@ export const SerializableClass = (parameter?: { size?: number; littleEndian?: bo
             property.deserialize(bytestream);
           }
         }
-      }
-
-      public static deserialize(bytes: Uint8Array): T1 {
-        const bytestream = { view: new DataView(bytes.buffer), pos: 0, littleEndian: parameter?.littleEndian };
-        const object = new T1();
-        object.deserialize(bytestream);
-        return object;
       }
     };
   };

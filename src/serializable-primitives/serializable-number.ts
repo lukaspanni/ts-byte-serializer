@@ -1,4 +1,5 @@
-import { AppendableByteStream, isAppendableByteStream } from '../serializable';
+import { isAppendableByteStream } from '../serializable';
+import { AppendableByteStream } from '../appendable-byte-stream';
 import { SerializablePrimitive } from './serializable-primitive';
 
 /**
@@ -9,8 +10,8 @@ import { SerializablePrimitive } from './serializable-primitive';
  */
 const buildSerializableNumberPrimitive = (
   size: number,
-  getFun: (view: DataView, pos: number, littleEndian?: boolean) => number,
-  setFun: (view: DataView, pos: number, value: number, littleEndian?: boolean) => void
+  getFun: (bytestream: AppendableByteStream) => number,
+  setFun: (bytestream: AppendableByteStream, value: number) => void
 ): new (data?: number | AppendableByteStream) => SerializablePrimitive<number> => {
   return class SerializableNumberPrimitive extends SerializablePrimitive<number> {
     public readonly size = size;
@@ -23,12 +24,12 @@ const buildSerializableNumberPrimitive = (
     }
 
     public append(bytestream: AppendableByteStream): void {
-      setFun(bytestream.view, bytestream.pos, this.value ?? 0, bytestream.littleEndian);
+      setFun(bytestream, this.value ?? 0);
       bytestream.pos += this.size;
     }
 
     protected readFromByteStream(bytestream: AppendableByteStream): number {
-      const value = getFun(bytestream.view, bytestream.pos, bytestream.littleEndian);
+      const value = getFun(bytestream);
       bytestream.pos += this.size;
       return value;
     }
@@ -37,48 +38,48 @@ const buildSerializableNumberPrimitive = (
 
 export const Uint8 = buildSerializableNumberPrimitive(
   1,
-  (view, pos) => view.getUint8(pos),
-  (view, pos, value) => view.setUint8(pos, value)
+  (bytestream) => bytestream.view.getUint8(bytestream.pos),
+  (bytestream, value) => bytestream.view.setUint8(bytestream.pos, value)
 );
 
 export const Uint16 = buildSerializableNumberPrimitive(
   2,
-  (view, pos, littleEndian) => view.getUint16(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setUint16(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getUint16(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setUint16(bytestream.pos, value, bytestream.littleEndian)
 );
 
 export const Uint32 = buildSerializableNumberPrimitive(
   4,
-  (view, pos, littleEndian) => view.getUint32(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setUint32(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getUint32(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setUint32(bytestream.pos, value, bytestream.littleEndian)
 );
 
 export const Int8 = buildSerializableNumberPrimitive(
   1,
-  (view, pos) => view.getInt8(pos),
-  (view, pos, value) => view.setInt8(pos, value)
+  (bytestream) => bytestream.view.getInt8(bytestream.pos),
+  (bytestream, value) => bytestream.view.setInt8(bytestream.pos, value)
 );
 
 export const Int16 = buildSerializableNumberPrimitive(
   2,
-  (view, pos, littleEndian) => view.getInt16(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setInt16(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getInt16(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setInt16(bytestream.pos, value, bytestream.littleEndian)
 );
 
 export const Int32 = buildSerializableNumberPrimitive(
   4,
-  (view, pos, littleEndian) => view.getInt32(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setInt32(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getInt32(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setInt32(bytestream.pos, value, bytestream.littleEndian)
 );
 
 export const Float32 = buildSerializableNumberPrimitive(
   4,
-  (view, pos, littleEndian) => view.getFloat32(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setFloat32(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getFloat32(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setFloat32(bytestream.pos, value, bytestream.littleEndian)
 );
 
 export const Float64 = buildSerializableNumberPrimitive(
   8,
-  (view, pos, littleEndian) => view.getFloat64(pos, littleEndian),
-  (view, pos, value, littleEndian) => view.setFloat64(pos, value, littleEndian)
+  (bytestream) => bytestream.view.getFloat64(bytestream.pos, bytestream.littleEndian),
+  (bytestream, value) => bytestream.view.setFloat64(bytestream.pos, value, bytestream.littleEndian)
 );

@@ -1,4 +1,5 @@
-import { AppendableByteStream, isAppendableByteStream, isSerializable, Serializable } from '../serializable';
+import { isAppendableByteStream, isSerializable, Serializable } from '../serializable';
+import { AppendableByteStream } from '../appendable-byte-stream';
 
 /**
  * Generic base class for serializable primitives to serve as building blocks for complex serializable types
@@ -34,7 +35,7 @@ export abstract class SerializablePrimitive<T> implements Serializable {
 
   public serialize(): Uint8Array {
     const array = new Uint8Array(this.size);
-    this.append({ view: new DataView(array.buffer), pos: 0 });
+    this.append(new AppendableByteStream(new DataView(array.buffer), 0));
     return array;
   }
 }

@@ -1,5 +1,5 @@
 import { SerializablePrimitive } from './serializable-primitive';
-import { AppendableByteStream } from '../serializable';
+import { AppendableByteStream } from '../appendable-byte-stream';
 
 /**
  * serializable array of bytes (based upon Uint8array)

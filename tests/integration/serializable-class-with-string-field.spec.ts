@@ -1,6 +1,7 @@
 import {
   AppendableByteStream,
   ByteArray,
+  deserialize,
   Serializable,
   SerializableByteArray,
   SerializableClass,
@@ -25,7 +26,7 @@ class ExampleClass implements Serializable {
     throw new Error('Method not implemented.');
   }
 
-  public deserialize(bytes: AppendableByteStream): void {
+  public deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -43,8 +44,8 @@ describe('Serializable class with string-field', () => {
     const bytes = new Uint8Array([0x54, 0x45, 0x53, 0x54]);
     const expectedObj = new ExampleClass('TEST');
 
-    const obj = new ExampleClass();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass);
+
     expect(obj).toEqual(expectedObj);
   });
 
@@ -52,8 +53,7 @@ describe('Serializable class with string-field', () => {
     const bytes = new Uint8Array([0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47]);
     const expectedObj = new ExampleClass('ABCD');
 
-    const obj = new ExampleClass();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass);
     expect(obj).toEqual(expectedObj);
   });
 });

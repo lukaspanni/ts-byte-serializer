@@ -1,5 +1,6 @@
 import {
   AppendableByteStream,
+  deserialize,
   Serializable,
   SerializableByteArray,
   SerializableClass,
@@ -22,7 +23,7 @@ class ExampleClass implements Serializable {
     throw new Error('Method not implemented.');
   }
 
-  public deserialize(bytes: AppendableByteStream): void {
+  public deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -46,7 +47,7 @@ class ExampleClass1 implements Serializable {
     throw new Error('Method not implemented.');
   }
 
-  public deserialize(bytes: AppendableByteStream): void {
+  public deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -64,8 +65,7 @@ describe('Serializable class with fixed-length byteArray ', () => {
     const bytes = new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04]);
     const expectedObj = new ExampleClass(new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04]));
 
-    const obj = new ExampleClass();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass);
     expect(obj).toEqual(expectedObj);
     expect(obj.testArray.length).toBe(5);
   });
@@ -74,8 +74,7 @@ describe('Serializable class with fixed-length byteArray ', () => {
     const bytes = new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x0a]);
     const expectedObj = new ExampleClass(new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04]));
 
-    const obj = new ExampleClass();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass);
     expect(obj).toEqual(expectedObj);
     expect(obj.testArray.length).toBe(5);
   });
@@ -100,8 +99,7 @@ describe('Serializable class with dynamic-length byteArray ', () => {
     const bytes = new Uint8Array([0x03, 0x00, 0x01, 0x02]);
     const expectedObj = new ExampleClass1(3, new Uint8Array([0x00, 0x01, 0x02]));
 
-    const obj = new ExampleClass1();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass1);
     expect(obj).toEqual(expectedObj);
   });
 
@@ -109,8 +107,7 @@ describe('Serializable class with dynamic-length byteArray ', () => {
     const bytes = new Uint8Array([0x05, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x0a]);
     const expectedObj = new ExampleClass1(5, new Uint8Array([0x00, 0x01, 0x02, 0x03, 0x04]));
 
-    const obj = new ExampleClass1();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleClass1);
     expect(obj).toEqual(expectedObj);
   });
 

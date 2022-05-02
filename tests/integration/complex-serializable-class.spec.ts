@@ -7,7 +7,8 @@ import {
   SerializableByteArray,
   SerializableClass,
   Serializable,
-  AppendableByteStream
+  AppendableByteStream,
+  deserialize
 } from '../../src/index';
 
 @SerializableClass({ littleEndian: true })
@@ -29,7 +30,7 @@ class ExampleHeader implements Serializable {
     throw new Error('Method not implemented.');
   }
 
-  deserialize(bytes: AppendableByteStream): void {
+  deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -65,7 +66,7 @@ class ExampleFrame implements Serializable {
     throw new Error('Method not implemented.');
   }
 
-  deserialize(bytes: AppendableByteStream): void {
+  deserialize(bytes: AppendableByteStream | Uint8Array): void {
     throw new Error('Method not implemented.');
   }
 }
@@ -86,8 +87,7 @@ describe('Complex serializable class with serializable object property', () => {
     const bytes = new Uint8Array([0x8a, 0x2c, 0x00, 0x03, 0x00, 0x00, 0x00, 0x03, 0x02, 0x01]);
     const expectedObj = new ExampleFrame(new ExampleHeader(138, 44), 3, new Uint8Array([0x03, 0x02, 0x01]));
 
-    const obj = new ExampleFrame();
-    obj.deserialize({ view: new DataView(bytes.buffer), pos: 0, littleEndian: true });
+    const obj = deserialize(bytes, ExampleFrame);
     expect(obj).toEqual(expectedObj);
   });
 
