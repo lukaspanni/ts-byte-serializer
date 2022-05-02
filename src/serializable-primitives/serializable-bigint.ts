@@ -1,5 +1,6 @@
 import { SerializablePrimitive } from './serializable-primitive';
-import { AppendableByteStream, isAppendableByteStream } from '../serializable';
+import { isAppendableByteStream } from '../serializable';
+import { AppendableByteStream } from '../appendable-byte-stream';
 
 /**
  * Build a new class for a serializable bigint
@@ -9,8 +10,8 @@ import { AppendableByteStream, isAppendableByteStream } from '../serializable';
  */
 const buildSerializableBigintPrimitive = (
   size: number,
-  getFun: (view: DataView, pos: number, littleEndian?: boolean) => bigint,
-  setFun: (view: DataView, pos: number, value: bigint, littleEndian?: boolean) => void
+  getFun: (bytestream: AppendableByteStream) => bigint,
+  setFun: (bytestream: AppendableByteStream, value: bigint) => void
 ): new (data?: bigint | AppendableByteStream) => SerializablePrimitive<bigint> => {
   return class SerializableBigIntPrimitive extends SerializablePrimitive<bigint> {
     public readonly size = size;
@@ -23,12 +24,12 @@ const buildSerializableBigintPrimitive = (
     }
 
     public append(bytestream: AppendableByteStream): void {
-      setFun(bytestream.view, bytestream.pos, this.value ?? 0, bytestream.littleEndian);
+      setFun(bytestream, this.value ?? 0);
       bytestream.pos += this.size;
     }
 
     protected readFromByteStream(bytestream: AppendableByteStream): bigint {
-      const value = getFun(bytestream.view, bytestream.pos, bytestream.littleEndian);
+      const value = getFun(bytestream);
       bytestream.pos += this.size;
       return value;
     }
@@ -37,12 +38,12 @@ const buildSerializableBigintPrimitive = (
 
 export const Uint64 = buildSerializableBigintPrimitive(
   8,
-  (view, pos) => view.getBigUint64(pos),
-  (view, pos, value) => view.setBigUint64(pos, value)
+  (bytestream) => bytestream.view.getBigUint64(bytestream.pos),
+  (bytestream, value) => bytestream.view.setBigUint64(bytestream.pos, value)
 );
 
 export const Int64 = buildSerializableBigintPrimitive(
   8,
-  (view, pos) => view.getBigInt64(pos),
-  (view, pos, value) => view.setBigInt64(pos, value)
+  (bytestream) => bytestream.view.getBigInt64(bytestream.pos),
+  (bytestream, value) => bytestream.view.setBigInt64(bytestream.pos, value)
 );

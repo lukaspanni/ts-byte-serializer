@@ -1,21 +1,13 @@
+import { AppendableByteStream } from './appendable-byte-stream';
+
 /**
  * A type that can be serialized to and deserialized from a bytestream
  */
 export interface Serializable {
   serialize(): Uint8Array;
 
-  deserialize(bytes: AppendableByteStream): void;
+  deserialize(bytes: AppendableByteStream | Uint8Array): void;
 }
-
-/**
- * Represents a bytestream which allows appending more bytes
- */
-export type AppendableByteStream = {
-  //TODO: maybe move to class
-  view: DataView;
-  pos: number;
-  littleEndian?: boolean;
-};
 
 export const isSerializable = (checkObject: any): checkObject is Serializable =>
   typeof checkObject === 'object' && 'serialize' in checkObject;
